@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:idauth/service/services.dart';
-import 'package:validatorless/validatorless.dart';
 
 class RegistroProvider extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();

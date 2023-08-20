@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:idauth/components/textformfild_component.dart';
 import 'package:idauth/providers/registro_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:idauth/service/services.dart';
 import 'package:validatorless/validatorless.dart';
 import 'validates/confirpassvalidate.dart';
 
