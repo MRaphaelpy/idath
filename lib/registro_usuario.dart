@@ -1,26 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:idauth/components/textformfild_component.dart';
+import 'package:idauth/providers/registro_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:idauth/service/services.dart';
 import 'package:validatorless/validatorless.dart';
 import 'validates/confirpassvalidate.dart';
 
-class RegistroPage extends StatefulWidget {
+class RegistroPage extends StatelessWidget {
   const RegistroPage({Key? key}) : super(key: key);
-
-  @override
-  State<RegistroPage> createState() => _RegistroPageState();
-}
-
-class _RegistroPageState extends State<RegistroPage> {
-  final formKey = GlobalKey<FormState>();
-  final _nomeController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _senhaController = TextEditingController();
-  final _confirmaSenhaController = TextEditingController();
-  final _enderecoController = TextEditingController();
-  final _cepController = TextEditingController();
-  bool showPassword = false;
-  String errorMessage = "";
 
   @override
   Widget build(BuildContext context) {
@@ -57,12 +44,13 @@ class _RegistroPageState extends State<RegistroPage> {
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Form(
-                  key: formKey,
+                  key: context.read<RegistroProvider>().formKey,
                   child: Column(
                     children: [
                       FormTextField(
                         keyboratType: TextInputType.name,
-                        controller: _nomeController,
+                        controller:
+                            context.read<RegistroProvider>().nomeController,
                         labelText: "Nome",
                         validator: Validatorless.multiple([
                           Validatorless.required("Nome é necessário"),
@@ -73,7 +61,8 @@ class _RegistroPageState extends State<RegistroPage> {
                       const SizedBox(height: 20),
                       FormTextField(
                         keyboratType: TextInputType.emailAddress,
-                        controller: _emailController,
+                        controller:
+                            context.read<RegistroProvider>().emailController,
                         labelText: "E-mail",
                         validator: Validatorless.multiple([
                           Validatorless.required("E-mail é necessário"),
@@ -83,8 +72,10 @@ class _RegistroPageState extends State<RegistroPage> {
                       const SizedBox(height: 20),
                       FormTextField(
                         keyboratType: TextInputType.visiblePassword,
-                        controller: _senhaController,
-                        obscureText: !showPassword,
+                        controller:
+                            context.read<RegistroProvider>().senhaController,
+                        obscureText:
+                            !context.watch<RegistroProvider>().showPassword,
                         labelText: "Senha",
                         validator: Validatorless.multiple([
                           Validatorless.required("Senha é necessária"),
@@ -94,21 +85,26 @@ class _RegistroPageState extends State<RegistroPage> {
                       ),
                       const SizedBox(height: 20),
                       FormTextField(
-                        obscureText: !showPassword,
-                        controller: _confirmaSenhaController,
+                        obscureText:
+                            !context.watch<RegistroProvider>().showPassword,
+                        controller: context
+                            .read<RegistroProvider>()
+                            .confirmaSenhaController,
                         labelText: "Confirmar Senha",
                         keyboratType: TextInputType.visiblePassword,
                         validator: Validatorless.multiple([
                           Validatorless.required(
                               "Confirmar Senha é necessária"),
                           Validators.compare(
-                              _senhaController, "Senha não confere")
+                              context.read<RegistroProvider>().senhaController,
+                              "Senha não confere")
                         ]),
                       ),
                       const SizedBox(height: 20),
                       FormTextField(
                         keyboratType: TextInputType.streetAddress,
-                        controller: _enderecoController,
+                        controller:
+                            context.read<RegistroProvider>().enderecoController,
                         labelText: "Endereço",
                         validator: Validatorless.multiple([
                           Validatorless.required("Endereço é necessário"),
@@ -118,7 +114,8 @@ class _RegistroPageState extends State<RegistroPage> {
                       ),
                       const SizedBox(height: 20),
                       FormTextField(
-                        controller: _cepController,
+                        controller:
+                            context.read<RegistroProvider>().cepController,
                         keyboratType: TextInputType.number,
                         labelText: "CEP",
                         validator: Validatorless.multiple([
@@ -130,77 +127,9 @@ class _RegistroPageState extends State<RegistroPage> {
                       const SizedBox(height: 20),
                       GestureDetector(
                         onTap: () async {
-                          if (formKey.currentState?.validate() == true) {
-                            print("Formulário Válido");
-                            final result = await Services.addUser(
-                              name: _nomeController.text,
-                              email: _emailController.text,
-                              password: _senhaController.text,
-                              cep: _cepController.text,
-                              endereco: _enderecoController.text,
-                              qrcode: "",
-                              autenticado: "0",
-                            );
-
-                            if (result == "success") {
-                              // ignore: use_build_context_synchronously
-                              Navigator.pop(context);
-                              // ignore: use_build_context_synchronously
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: const Text("Sucesso"),
-                                    content: const Text(
-                                        "Usuário registrado com sucesso!"),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: const Text("OK"),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            } else {
-                              print(result);
-                              setState(() {
-                                errorMessage =
-                                    "Erro ao registrar usuário: Email já registrado";
-                              });
-
-                              // ignore: use_build_context_synchronously
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AnimatedOpacity(
-                                    duration: const Duration(milliseconds: 300),
-                                    curve: Curves.easeInOut,
-                                    opacity: errorMessage.isNotEmpty ? 1 : 0,
-                                    child: AlertDialog(
-                                      title: const Text("Erro"),
-                                      content: Text(errorMessage),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              errorMessage = "";
-                                            });
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text("OK"),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              );
-                            }
-                          } else {
-                            print("Formulário Inválido teste");
-                          }
+                          await context
+                              .read<RegistroProvider>()
+                              .register(context);
                         },
                         child: Container(
                           padding: const EdgeInsets.all(25),
@@ -217,9 +146,12 @@ class _RegistroPageState extends State<RegistroPage> {
                           ),
                         ),
                       ),
-                      if (errorMessage.isNotEmpty)
+                      if (context
+                          .watch<RegistroProvider>()
+                          .errorMessage
+                          .isNotEmpty)
                         Text(
-                          errorMessage,
+                          context.watch<RegistroProvider>().errorMessage,
                           style: const TextStyle(color: Colors.red),
                         ),
                     ],

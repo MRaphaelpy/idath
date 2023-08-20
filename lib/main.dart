@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:idauth/providers/login_provider.dart';
+import 'package:idauth/providers/registro_provider.dart';
+import 'package:provider/provider.dart';
 
-import 'home_page.dart';
+import 'package:idauth/home_page.dart';
 
 void main() {
   runApp(
-    const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomePage(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => LoginProvider()),
+        ChangeNotifierProvider(
+            create: (_) =>
+                RegistroProvider()), // Adicione o RegistroProvider aqui
+      ],
+      child: const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: HomePage(),
+      ),
     ),
   );
 }
