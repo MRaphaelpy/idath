@@ -56,6 +56,6 @@ class UserModel {
 
   String getUpdatedQrcode() {
     updateQrcode();
-    return this.qrcode;
+    return qrcode;
   }
 }

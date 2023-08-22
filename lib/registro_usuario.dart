@@ -11,17 +11,17 @@ class RegistroPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade300,
+      backgroundColor: const Color(0xFF212121),
       appBar: AppBar(
         shadowColor: Colors.transparent,
-        backgroundColor: Colors.grey.shade300,
+        backgroundColor: const Color(0xFF212121),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
           },
           icon: const Icon(
             Icons.arrow_back_ios_new,
-            color: Colors.black,
+            color: Colors.white,
           ),
         ),
       ),
@@ -34,7 +34,7 @@ class RegistroPage extends StatelessWidget {
                 child: Text(
                   'Registro',
                   style: TextStyle(
-                    color: Colors.black,
+                    color: Colors.white,
                     fontWeight: FontWeight.w800,
                     fontSize: 30,
                   ),
@@ -47,7 +47,7 @@ class RegistroPage extends StatelessWidget {
                   child: Column(
                     children: [
                       FormTextField(
-                        keyboratType: TextInputType.name,
+                        keyboardType: TextInputType.name,
                         controller:
                             context.read<RegistroProvider>().nomeController,
                         labelText: "Nome",
@@ -59,7 +59,7 @@ class RegistroPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       FormTextField(
-                        keyboratType: TextInputType.emailAddress,
+                        keyboardType: TextInputType.name,
                         controller:
                             context.read<RegistroProvider>().emailController,
                         labelText: "E-mail",
@@ -70,7 +70,8 @@ class RegistroPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       FormTextField(
-                        keyboratType: TextInputType.visiblePassword,
+                        showEyeIcon: true,
+                        keyboardType: TextInputType.visiblePassword,
                         controller:
                             context.read<RegistroProvider>().senhaController,
                         obscureText:
@@ -84,13 +85,14 @@ class RegistroPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       FormTextField(
+                        showEyeIcon: true,
                         obscureText:
                             !context.watch<RegistroProvider>().showPassword,
                         controller: context
                             .read<RegistroProvider>()
                             .confirmaSenhaController,
                         labelText: "Confirmar Senha",
-                        keyboratType: TextInputType.visiblePassword,
+                        keyboardType: TextInputType.visiblePassword,
                         validator: Validatorless.multiple([
                           Validatorless.required(
                               "Confirmar Senha é necessária"),
@@ -101,7 +103,7 @@ class RegistroPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       FormTextField(
-                        keyboratType: TextInputType.streetAddress,
+                        keyboardType: TextInputType.number,
                         controller:
                             context.read<RegistroProvider>().enderecoController,
                         labelText: "Endereço",
@@ -113,9 +115,9 @@ class RegistroPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       FormTextField(
+                        keyboardType: TextInputType.number,
                         controller:
                             context.read<RegistroProvider>().cepController,
-                        keyboratType: TextInputType.number,
                         labelText: "CEP",
                         validator: Validatorless.multiple([
                           Validatorless.required("CEP é necessário"),
@@ -134,13 +136,15 @@ class RegistroPage extends StatelessWidget {
                           padding: const EdgeInsets.all(25),
                           margin: const EdgeInsets.symmetric(horizontal: 25),
                           decoration: BoxDecoration(
-                            color: Colors.black,
+                            color: Color(0xFF00E676),
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child: const Text(
-                            "Registrar",
+                            "Registrar-se",
                             style: TextStyle(
-                              color: Colors.white,
+                              color: Colors.black,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
                         ),

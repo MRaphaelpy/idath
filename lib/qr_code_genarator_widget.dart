@@ -65,6 +65,7 @@ class _QRCodeGeneratorScreenState extends State<QRCodeGeneratorScreen> {
       if (autenticado == "1") {
         print("Usuário autenticado!");
         _setUserNotAuthenticated(); // Define o usuário como não autenticado
+        // ignore: use_build_context_synchronously
         Navigator.pop(context); // Volta para a tela anterior
       } else if (autenticado == "0") {
         print("Usuário não autenticado!");
