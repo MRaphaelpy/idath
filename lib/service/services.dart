@@ -1,9 +1,11 @@
 import 'dart:convert';
-import 'interface_http_service.dart';
-import 'user_model.dart';
+import 'package:idauth/components/authcomponents/password_hasher.dart';
+import 'package:idauth/global_values.dart';
+import 'package:idauth/service/interface_http_service.dart';
+import 'package:idauth/service/user_model.dart';
 
 class Services {
-  static const root = "http://192.168.1.10/flutter/users_actions.php";
+  static const root = "http://192.168.1.15/flutter/users_actions.php";
   static const getAllAction = "GET_ALL";
   static const addUserAction = "ADD_USER";
   static const updateQrCodeAction = "UPDATE_QRCODE";
@@ -21,7 +23,8 @@ class Services {
         List<UserModel> list = parseResponse(response.body);
         return list;
       } else {
-        throw Exception("Erro ao obter usuários.");
+        throw Exception(
+            "Erro ao obter usuários. Código: ${response.statusCode}");
       }
     } catch (e) {
       throw Exception("Erro ao obter usuários: $e");
@@ -47,7 +50,8 @@ class Services {
       if (response.statusCode == 200) {
         return response.body;
       } else {
-        throw Exception("Erro ao atualizar código QR.");
+        throw Exception(
+            "Erro ao atualizar código QR. Código: ${response.statusCode}");
       }
     } catch (e) {
       throw Exception("Erro ao atualizar código QR: $e");
@@ -64,21 +68,26 @@ class Services {
     required String autenticado,
   }) async {
     try {
+      PasswordHasher hasher = PasswordHasher(GlobalValues.authHashToken);
+      final hashedPassword = hasher.hashPassword(password);
+
       var map = <String, dynamic>{};
       map['action'] = addUserAction;
       map['name'] = name;
       map['email'] = email;
-      map['password'] = password;
+      map['password'] = hashedPassword;
       map['qrcode'] = qrcode;
       map['cep'] = cep;
       map['endereco'] = endereco;
       map['autenticado'] = autenticado;
+
       final response = await httpService.post(root, map);
 
       if (response.statusCode == 200) {
         return response.body;
       } else {
-        throw Exception("Erro ao adicionar usuário.");
+        throw Exception(
+            "Erro ao adicionar usuário. Código: ${response.statusCode}");
       }
     } catch (e) {
       throw Exception("Erro ao adicionar usuário: $e");
@@ -95,7 +104,8 @@ class Services {
       if (response.statusCode == 200) {
         return response.body;
       } else {
-        throw Exception("Erro ao obter valor autenticado.");
+        throw Exception(
+            "Erro ao obter valor autenticado. Código: ${response.statusCode}");
       }
     } catch (e) {
       throw Exception("Erro ao obter valor autenticado: $e");
@@ -114,7 +124,8 @@ class Services {
       if (response.statusCode == 200) {
         return response.body;
       } else {
-        throw Exception("Erro ao atualizar autenticado.");
+        throw Exception(
+            "Erro ao atualizar autenticado. Código: ${response.statusCode}");
       }
     } catch (e) {
       throw Exception("Erro ao atualizar autenticado: $e");

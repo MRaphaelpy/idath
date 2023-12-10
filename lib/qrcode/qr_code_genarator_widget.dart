@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously, empty_catches
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:idauth/service/services.dart';
@@ -7,10 +9,10 @@ import 'package:qr_flutter/qr_flutter.dart';
 class QRCodeGeneratorScreen extends StatefulWidget {
   final UserModel userAutenticated;
 
-  const QRCodeGeneratorScreen({super.key, required this.userAutenticated});
+  const QRCodeGeneratorScreen({Key? key, required this.userAutenticated})
+      : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _QRCodeGeneratorScreenState createState() => _QRCodeGeneratorScreenState();
 }
 
@@ -18,17 +20,19 @@ class _QRCodeGeneratorScreenState extends State<QRCodeGeneratorScreen> {
   String _qrCodeData = '';
   double _progressValue = 0.0;
   Timer? _timer;
+  final double maxProgressValue =
+      0.9; // Defina o limite máximo de progresso aqui
 
   @override
   void initState() {
     super.initState();
-    _generateAndSendQRCode(); // Chama a função para gerar e enviar o QR Code
+    _generateAndSendQRCode();
     _startTimer();
   }
 
   void _startTimer() {
     const interval = Duration(seconds: 1);
-    const totalDuration = Duration(seconds: 5);
+    const totalDuration = Duration(seconds: 30);
 
     _timer = Timer.periodic(interval, (timer) {
       setState(() {
@@ -37,8 +41,8 @@ class _QRCodeGeneratorScreenState extends State<QRCodeGeneratorScreen> {
 
       if (timer.tick >= totalDuration.inSeconds) {
         timer.cancel();
-        _generateAndSendQRCode(); // Gera e envia um novo QR Code
-        _checkAuthentication(); // Verifica autenticação após o término do timer
+        _generateAndSendQRCode();
+        _checkAuthentication();
         _startTimer();
       }
     });
@@ -54,8 +58,6 @@ class _QRCodeGeneratorScreenState extends State<QRCodeGeneratorScreen> {
     setState(() {
       _qrCodeData = newQrcode;
     });
-
-    print('Novo QR Code gerado e enviado: $_qrCodeData');
   }
 
   void _checkAuthentication() async {
@@ -63,26 +65,18 @@ class _QRCodeGeneratorScreenState extends State<QRCodeGeneratorScreen> {
       String autenticado = await Services.getAutenticadoId(
           widget.userAutenticated.id.toString());
       if (autenticado == "1") {
-        print("Usuário autenticado!");
-        _setUserNotAuthenticated(); // Define o usuário como não autenticado
-        // ignore: use_build_context_synchronously
-        Navigator.pop(context); // Volta para a tela anterior
-      } else if (autenticado == "0") {
-        print("Usuário não autenticado!");
-      }
-    } catch (e) {
-      print("Erro ao verificar autenticação: $e");
-    }
+        _setUserNotAuthenticated();
+
+        Navigator.pop(context);
+      } else if (autenticado == "0") {}
+    } catch (e) {}
   }
 
   void _setUserNotAuthenticated() async {
     try {
       await Services.updateAutenticadoId(
           widget.userAutenticated.id.toString(), "0");
-      print("Usuário definido como não autenticado!");
-    } catch (e) {
-      print("Erro ao definir usuário como não autenticado: $e");
-    }
+    } catch (e) {}
   }
 
   @override
@@ -108,8 +102,13 @@ class _QRCodeGeneratorScreenState extends State<QRCodeGeneratorScreen> {
           Text(_qrCodeData.toString()),
           Container(
             padding: const EdgeInsets.only(left: 50.0, right: 50.0),
-            child: LinearProgressIndicator(
-              value: _progressValue,
+            child: Container(
+              alignment: Alignment.center,
+              child: LinearProgressIndicator(
+                value: _progressValue > maxProgressValue
+                    ? maxProgressValue
+                    : _progressValue,
+              ),
             ),
           ),
         ],

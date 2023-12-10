@@ -21,7 +21,7 @@ class RegistroProvider extends ChangeNotifier {
 
       final result = await Services.addUser(
         name: nomeController.text,
-        email: emailController.text,
+        email: emailController.text.toLowerCase(),
         password: senhaController.text,
         cep: cepController.text,
         endereco: enderecoController.text,

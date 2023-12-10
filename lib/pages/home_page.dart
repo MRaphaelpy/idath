@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:idauth/components/custombtn.dart';
-import 'package:idauth/login_page_state.dart';
-import 'package:idauth/registro_usuario.dart';
+import 'package:idauth/components/custombuttons/custombtn.dart';
+import 'package:idauth/pages/login_page_state.dart';
+import 'package:idauth/pages/registro_usuario.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

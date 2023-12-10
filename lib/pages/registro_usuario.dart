@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:idauth/components/textformfild_component.dart';
+import 'package:idauth/components/textfilds/textformfild_component.dart';
 import 'package:idauth/providers/registro_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:validatorless/validatorless.dart';
-import 'validates/confirpassvalidate.dart';
+import '../validates/confirpassvalidate.dart';
 
 class RegistroPage extends StatelessWidget {
   const RegistroPage({Key? key}) : super(key: key);
@@ -103,7 +103,7 @@ class RegistroPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       FormTextField(
-                        keyboardType: TextInputType.number,
+                        keyboardType: TextInputType.text,
                         controller:
                             context.read<RegistroProvider>().enderecoController,
                         labelText: "Endereço",
@@ -136,7 +136,7 @@ class RegistroPage extends StatelessWidget {
                           padding: const EdgeInsets.all(25),
                           margin: const EdgeInsets.symmetric(horizontal: 25),
                           decoration: BoxDecoration(
-                            color: Color(0xFF00E676),
+                            color: const Color(0xFF00E676),
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child: const Text(

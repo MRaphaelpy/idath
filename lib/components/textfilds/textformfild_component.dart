@@ -1,32 +1,36 @@
 import 'package:flutter/material.dart';
 
-class CustomTextField extends StatefulWidget {
+class FormTextField extends StatefulWidget {
   final TextEditingController controller;
   final String labelText;
+  final String? Function(String?)? validator;
   final bool obscureText;
+  final TextInputType keyboardType;
   final bool showEyeIcon;
 
-  const CustomTextField({
+  const FormTextField({
     Key? key,
     required this.controller,
     required this.labelText,
-    required this.obscureText,
-    required this.showEyeIcon,
+    this.validator,
+    required this.keyboardType,
+    this.obscureText = false,
+    this.showEyeIcon = false,
   }) : super(key: key);
 
   @override
-  _CustomTextFieldState createState() => _CustomTextFieldState();
+  // ignore: library_private_types_in_public_api
+  _FormTextFieldState createState() => _FormTextFieldState();
 }
 
-class _CustomTextFieldState extends State<CustomTextField> {
+class _FormTextFieldState extends State<FormTextField> {
   bool _isObscured = true;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25.0),
-      child: TextField(
-        obscureText: widget.obscureText && _isObscured,
+      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+      child: TextFormField(
         controller: widget.controller,
         decoration: InputDecoration(
           border: const OutlineInputBorder(
@@ -52,6 +56,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 )
               : null,
         ),
+        validator: widget.validator,
+        obscureText: widget.obscureText && _isObscured,
+        keyboardType: widget.keyboardType,
       ),
     );
   }
